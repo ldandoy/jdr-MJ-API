@@ -76,8 +76,8 @@ Router.patch('/senarios/:id', (req, res, next) => {
 
 // GET: http://localhost:4500/db/todos/{todoId}
 Router.get('/senarios/:id', (req, res, next) => {
-    senarioModel.find({
-        "_id": req.params.id
+    senarioModel.findOne({
+        "_id" : req.params.id
     })
     .exec()
     .then(senario => {
