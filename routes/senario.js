@@ -7,7 +7,7 @@ const Router = express.Router();
 const senarioModel = require('../models/Senario');
 
 // POST: /api/senarios
-Router.post('/senarios', (req, res, next) => {
+Router.post('/', (req, res, next) => {
     console.log(req.body);
     
     const senario = new senarioModel({
@@ -27,7 +27,7 @@ Router.post('/senarios', (req, res, next) => {
 });
 
 // GET: /api/senarios
-Router.get('/senarios', (req, res, next) => {
+Router.get('/', (req, res, next) => {
     senarioModel.find()
     .then(senarios => {
         res.status('200').json(senarios);
@@ -38,7 +38,7 @@ Router.get('/senarios', (req, res, next) => {
 });
 
 // DELETE: /api/senarios/:id
-Router.delete('/senarios/:id', (req, res, next) => {
+Router.delete('/:id', (req, res, next) => {
     senarioModel.remove({
         "_id": req.params.id
     })
@@ -52,7 +52,7 @@ Router.delete('/senarios/:id', (req, res, next) => {
 });
 
 // PATCH: http://localhost:4500/db/todos/{todoId}
-Router.patch('/senarios/:id', (req, res, next) => {
+Router.patch('/:id', (req, res, next) => {
     data = {};
 
     if (req.body.title) { data['title'] = req.body.title; }
@@ -75,7 +75,7 @@ Router.patch('/senarios/:id', (req, res, next) => {
 });
 
 // GET: http://localhost:4500/db/todos/{todoId}
-Router.get('/senarios/:id', (req, res, next) => {
+Router.get('/:id', (req, res, next) => {
     senarioModel.findOne({
         "_id" : req.params.id
     })

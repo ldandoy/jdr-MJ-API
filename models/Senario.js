@@ -17,7 +17,10 @@ const SenarioSchema = new mongoose.Schema({
         type: String
     }
 },{
-    timestamps: true
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
 });
 
 module.exports = mongoose.model('senarios', SenarioSchema);
