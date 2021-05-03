@@ -76,8 +76,9 @@ const checkLogin = (data) => {
 
 // Vérifie si l'utilisateur est connecté
 const auth = async (req, res, next)  => {
+    console.log(req.cookies.jwt)
     try {
-        const token = req.cookies.token || '';
+        const token = req.cookies.jwt || '';
         console.log(token)
         const decrypt = await jwt.verify(token, process.env.JWT_SECRET);
         console.log(decrypt)

@@ -60,7 +60,7 @@ Router.post('/login', (req, res, next) => {
         })
         .then(user => {
             if (user == null) {
-                next({'message': "Email et mot de passe incorrect"})
+                next({'message': "Email et mot de passe incorrect", status: "error"})
             } else {
                 bcrypt.compare(req.body.password, user.password, (error, result) => {
                     if (error) {
@@ -71,25 +71,33 @@ Router.post('/login', (req, res, next) => {
                         id:     user._id,
                         email:  user.email
                     },
-                    process.env.JWT_TOKEN,
+                    process.env.JWT_SECRET,
                     {
                         expiresIn: "1h"
                     })
 
-                    const refreshToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_TOKEN);
+                    const refreshToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET);
 
-                    refreshTokens.push(refreshToken);
-
-                    res.status(200).cookie('jwt', accessToken, {
+                    res.status(200);
+                    res.cookie('jwt', accessToken, {
                         sameSite: 'strict',
                         path: '/',
                         expires: new Date(new Date().getTime() + 5 * 1000),
                         httpOnly: true,
                         secure: true
-                    }).send({
+                    });
+                    res.cookie('jwt-refresh', refreshToken, {
+                        sameSite: 'strict',
+                        path: '/',
+                        expires: new Date(new Date().getTime() + 5 * 1000000),
+                        httpOnly: true,
+                        secure: true
+                    });
+                    res.send({
                         accessToken,
-                        refreshToken
-                    })
+                        refreshToken,
+                        status: "success"
+                    });
                 })
             }
         })
@@ -97,7 +105,7 @@ Router.post('/login', (req, res, next) => {
             next(error)
         });
     } else {
-        next({'message': "Email et mot de passe incorrect"});
+        next({'message': "Email et mot de passe incorrect", status: "error"});
     }
 });
 
