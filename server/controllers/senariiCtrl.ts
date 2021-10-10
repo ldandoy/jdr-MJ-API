@@ -6,7 +6,14 @@ const senariiCtrl = {
     all: async (req: Request, res: Response) => {
         try {
             const senarii = await senariiModel.find()
-
+            return res.json(senarii)
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
+        }
+    },
+    visible: async (req: Request, res: Response) => {
+        try {
+            const senarii = await senariiModel.find({$or: [{status: "Béta"}, {status: "Publié"}]})
             return res.json(senarii)
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
@@ -50,26 +57,21 @@ const senariiCtrl = {
             return res.status(500).json({msg: error.message})
         }
     },
-    update: async (req: Request, res: Response) => {
+    update: async (req: IReqAuth, res: Response) => {
+        if(!req.user) return res.status(400).json({msg: "Invalid Authentication."})
+
         try {
-            let data: Senario = {
-                title: '',
-                description: '',
-                universe: '',
-                picture: ''
-            };
+            let data: Senario = req.body
 
-            if (req.body.title) { data['title'] = req.body.title; }
-            if (req.body.description) { data['description'] = req.body.description; }
-            if (req.body.universe) { data['universe'] = req.body.universe; }
-            if (req.body.picture) { data['picture'] = req.body.picture; }
+            console.log(req.body, req.params.id)
 
-            senariiModel.updateOne({
+            await senariiModel.updateOne({
                 "_id": req.params.id
-            },{
+            }, {
                 $set: data
             })
-            
+
+            res.status(200).json('Sénario bien mis à jour !')
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }

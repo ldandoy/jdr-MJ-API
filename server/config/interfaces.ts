@@ -35,9 +35,35 @@ export interface IReqAuth extends Request {
     user?: IUser
 }
 
+export interface Action {
+    label: string
+    url: string
+    type: string
+    success?: string
+    competence?: string
+    gotoSuccess?: string
+    gotoLabelSuccess?: string
+    textSuccess?: string
+    gotoFailed?: string
+    gotoLabelFailed?: string
+    textFailed?: string
+    textCombat?: string
+}
+
+export interface Section {
+    title: string
+    description: string
+    picture: string
+    actions: Action[]
+}
+
 export interface Senario {
     title: string
+    status: string
     description: string
     universe: string
     picture: string
+    nbPersonne: number
+    duration: number
+    sections: Section[]
 }

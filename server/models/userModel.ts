@@ -35,7 +35,8 @@ const userSchema = new mongoose.Schema({
     reset_token: {
         type: String,
         default: ''
-    }
+    },
+    senarii: [{ type: mongoose.Types.ObjectId, ref: 'Senario' }]
 }, {
     timestamps: {
         createdAt: 'created_at',

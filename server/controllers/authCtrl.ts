@@ -11,7 +11,6 @@ import { validEmail, validPhone } from '../middlewares/valid'
 import { IDecodedToken, IGgPayload } from '../config/interfaces'
 
 const client = new OAuth2Client(`${process.env.GOOGLE_CLIENT_ID}`)
-const CLIENT_URL = `${process.env.BASE_URL}`
 
 const authCtrl = {
     register: async (req: Request, res: Response) => {
@@ -40,7 +39,7 @@ const authCtrl = {
             } else {
                 return res.status(500).json({msg: "Vos informations ne nous permettent pas de créer le compte."})
             }
-        } catch (error) {
+        } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }
     },
@@ -70,7 +69,7 @@ const authCtrl = {
                 access_token,
                 user: {...user._doc, password: ''}
             })
-        } catch (error) {
+        } catch (error: any) {
             return res.status(500).json({ msg: error.message })
         }
     },
@@ -92,21 +91,19 @@ const authCtrl = {
 
             const new_user = new userModel(newUser)
 
-            console.log(new_user)
-
             await new_user.save()
 
             res.json({msg: "Account has been activated!"})
     
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
         }
     },
     logout: async (req: Request, res: Response) => {
         try {
             res.clearCookie('refreshtoken', { path: `/api/refresh_token` })
             return res.json({msg: "Logout !"})
-        } catch (error) {
+        } catch (error: any) {
             return res.status(500).json({ msg: error.message })
         }
     },
@@ -120,7 +117,7 @@ const authCtrl = {
 
             if (!decoded) return res.status(500).json({ msg: "Merci de vous authentifier !" })
 
-            const user = await userModel.findById(decoded.id).select('-password')
+            const user = await userModel.findById(decoded.id).populate('senarii').select('-password')
 
             if (!user) return res.status(500).json({ msg: "Ce compte n'existe pas !" })
 
@@ -130,7 +127,7 @@ const authCtrl = {
                 access_token,
                 user
             })
-        } catch (error) {
+        } catch (error: any) {
             return res.status(500).json({ msg: error.message })
         }
     },
@@ -194,8 +191,8 @@ const authCtrl = {
                 })
             }
           
-        } catch (err: any) {
-          return res.status(500).json({msg: err.message})
+        } catch (error: any) {
+          return res.status(500).json({msg: error.message})
         }
     },
     forgot_password: async(req: Request, res: Response) => {
@@ -225,8 +222,8 @@ const authCtrl = {
                 return res.status(500).json({msg: "Cet utilisateur n'existe pas"})
             }
         
-        } catch (err: any) {
-            return res.status(500).json({msg: err.message})
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
         }
     },
     reset_password: async(req: Request, res: Response) => {
@@ -253,8 +250,8 @@ const authCtrl = {
             } else {
                 return res.status(500).json({msg: "Les infos envoyées n'ont pas permis de mettre à jour le mot de passe"})
             }
-        } catch (err: any) {
-            return res.status(500).json({msg: err.message})
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
         }
     }
 }

@@ -5,6 +5,10 @@ const senariiSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    status: {
+        type: String,
+        require: true
+    },
     universe: {
         type: String,
         require: true
@@ -15,7 +19,32 @@ const senariiSchema = new mongoose.Schema({
     },
     picture: {
         type: String
-    }
+    },
+    nbPersonne: {
+        type: String
+    },
+    duration: {
+        type: String
+    },
+    sections:[{
+        title: { type: String},
+        picture: { type: String},
+        description: { type: String},
+        actions: [{
+            label: {type: String},
+            url: {type: String},
+            type: {type: String},
+            success: {type: String},
+            competence: {type: String},
+            gotoSuccess: {type: String},
+            gotoLabelSuccess: {type: String},
+            textSuccess: {type: String},
+            gotoFailed: {type: String},
+            gotoLabelFailed: {type: String},
+            textFailed: {type: String},
+            textCombat: {type: String},
+        }]
+    }]
 }, {
     timestamps: {
         createdAt: 'created_at',
