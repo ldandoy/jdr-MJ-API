@@ -4,11 +4,12 @@ import { Request } from 'express'
 export interface IUser extends Document {
     name: string,
     account: string,
-    password: string,
+    password?: string,
     avatar: string,
     role: string,
     type: string,
     reset_token: string
+    senarii: string[]
 }
 
 export interface INewUser {
@@ -65,5 +66,6 @@ export interface Senario {
     picture: string
     nbPersonne: number
     duration: number
+    owner?: IUser
     sections: Section[]
 }

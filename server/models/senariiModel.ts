@@ -26,6 +26,10 @@ const senariiSchema = new mongoose.Schema({
     duration: {
         type: String
     },
+    owner: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
+    },
     sections:[{
         title: { type: String},
         picture: { type: String},

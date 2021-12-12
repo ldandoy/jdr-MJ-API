@@ -1,11 +1,24 @@
 import { Request, Response } from 'express'
-import { Senario, IReqAuth } from '../config/interfaces'
+import { Senario, IReqAuth, IUser } from '../config/interfaces'
 import senariiModel from '../models/senariiModel'
+import userModel from '../models/userModel'
+
+const createSenarii = async (senarii:Senario) => {
+    return await senariiModel.create(senarii)
+}
+
+const addSenariiToUser = async (userId:string, senariiId: string) => {
+    return await userModel.findByIdAndUpdate(
+        userId,
+        { $push: { senarii: senariiId } },
+        { new: true, useFindAndModify: false }
+      );
+}
 
 const senariiCtrl = {
     all: async (req: Request, res: Response) => {
         try {
-            const senarii = await senariiModel.find()
+            const senarii = await senariiModel.find().populate('owner')
             return res.json(senarii)
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
@@ -23,34 +36,50 @@ const senariiCtrl = {
         try {
             const senario = await senariiModel.findOne({
                 "_id" : req.params.id
-            })
+            }).populate('owner')
             
             return res.json(senario)
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }
     },
-    delete: async (req: Request, res: Response) => {
+    delete: async (req: IReqAuth, res: Response) => {
         try {
-            await senariiModel.remove({
-                "_id": req.params.id
-            })
+            const senario = await senariiModel.findOne({
+                "_id" : req.params.id
+            }).populate('owner')
+    
+            if (senario.owner._id.equals(req.user?._id)) {
+                console.log('supp')
+
+                await senariiModel.remove({
+                    "_id": req.params.id
+                })
+
+                await userModel.updateOne({ '_id': senario.owner._id }, { $pull: { senarii: senario._id } })
+            }
             
             res.status(200).json({"message": "Sénario bien supprimé !"})
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }
     },
-    create: async (req: Request, res: Response) => {
+    create: async (req: IReqAuth, res: Response) => {
         try {
-            const senario = new senariiModel ({
+            const senario = {
                 title:          req.body.title,
                 description:    req.body.description,
                 universe:       req.body.universe,
-                picture:        null
-            });
+                status:         req.body.status,
+                picture:        req.body.picture,
+                nbPersonne:     req.body.nbPersonne,
+                duration:       req.body.duration,
+                sections:       req.body.sections,
+                owner:          req.user?._id
+            };
         
-            await senario.save()
+            let newSenario = await createSenarii(senario)
+            await addSenariiToUser(req.user?._id, newSenario._id)
 
             res.status(200).json(senario)
         } catch (error: any) {
@@ -62,8 +91,6 @@ const senariiCtrl = {
 
         try {
             let data: Senario = req.body
-
-            console.log(req.body, req.params.id)
 
             await senariiModel.updateOne({
                 "_id": req.params.id

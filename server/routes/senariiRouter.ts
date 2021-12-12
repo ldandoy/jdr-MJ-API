@@ -11,6 +11,10 @@ Router.get('/senarii/visible', senariiCtrl.visible)
 
 Router.get('/senarii/:id', senariiCtrl.get)
 
-Router.post('/senarii/:id', auth, senariiCtrl.update)
+Router.put('/senarii/:id', auth, senariiCtrl.update)
+
+Router.post('/senarii/new', auth, senariiCtrl.create)
+
+Router.delete('/senarii/:id', auth, senariiCtrl.delete)
 
 export default Router
