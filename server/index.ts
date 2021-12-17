@@ -12,10 +12,13 @@ import routes from './routes/index'
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors())
+app.use(cors({
+    origin: [`${process.env.BASE_URL}`],
+    credentials: true,
+}))
 app.use(morgan('dev'))
 app.use(cookieParser())
-app.use(express.static('public'));
+app.use(express.static('public'))
 
 // Database
 import './config/database'
@@ -28,5 +31,5 @@ app.use('/api', routes.senariiRouter)
 // server listenning
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
-    console.log('Server is running on port', PORT)
+    console.log(`Server is running on ${process.env.BASE_URL}`)
 })
