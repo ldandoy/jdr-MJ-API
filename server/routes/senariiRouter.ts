@@ -19,4 +19,6 @@ Router.post('/senarii/new', auth, senariiCtrl.create)
 
 Router.delete('/senarii/:id', auth, senariiCtrl.delete)
 
+Router.delete('/senarii/:id/comment/:index', auth, senariiCtrl.deleteComment)
+
 export default Router

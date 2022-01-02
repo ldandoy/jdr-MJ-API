@@ -48,11 +48,9 @@ const senariiCtrl = {
             const senario = await senariiModel.findOne({
                 "_id" : req.params.id
             }).populate('owner')
-    
-            if (senario.owner._id.equals(req.user?._id)) {
-                console.log('supp')
 
-                await senariiModel.remove({
+            if (senario.owner._id.equals(req.user?._id)) {
+                await senariiModel.deleteOne({
                     "_id": req.params.id
                 })
 
@@ -116,6 +114,25 @@ const senariiCtrl = {
             })
 
             res.status(200).json({msg: 'Commentaire bien ajouter !'})
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
+        }
+    },
+    deleteComment : async (req: IReqAuth, res: Response) => {
+        if(!req.user) return res.status(400).json({msg: "Invalid Authentication."})
+
+        try {
+            let scenario = await senariiModel.findOne({"_id": req.params.id})
+
+            if (req.user._id.equals(scenario.comments[req.params.index].owner)) {
+                scenario.comments.splice(req.params.index, 1);
+
+                await scenario.save()
+
+                res.status(200).json({scenario, msg: 'Commentaire bien supprimer !'})
+            } else {
+                return res.status(500).json({msg: "Vous n'êtes pas l'auteur de commentaire !"})
+            }
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }
