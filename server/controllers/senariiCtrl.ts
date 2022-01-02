@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Senario, IReqAuth, IUser } from '../config/interfaces'
+import { Senario, IReqAuth, Comment } from '../config/interfaces'
 import senariiModel from '../models/senariiModel'
 import userModel from '../models/userModel'
 
@@ -99,6 +99,23 @@ const senariiCtrl = {
             })
 
             res.status(200).json('Sénario bien mis à jour !')
+        } catch (error: any) {
+            return res.status(500).json({msg: error.message})
+        }
+    },
+    addComment: async (req: IReqAuth, res: Response) => {
+        if(!req.user) return res.status(400).json({msg: "Invalid Authentication."})
+
+        try {
+            let comment: Comment = req.body
+
+            await senariiModel.updateOne({
+                "_id": req.params.id
+            }, {
+                $push: {comments: comment}
+            })
+
+            res.status(200).json({msg: 'Commentaire bien ajouter !'})
         } catch (error: any) {
             return res.status(500).json({msg: error.message})
         }

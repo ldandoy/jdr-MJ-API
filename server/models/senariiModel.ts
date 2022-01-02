@@ -48,6 +48,16 @@ const senariiSchema = new mongoose.Schema({
             textFailed: {type: String},
             textCombat: {type: String},
         }]
+    }],
+    comments:[{
+        com: {
+            type: String,
+            required: true
+        },
+        owner: {
+            type: mongoose.Types.ObjectId,
+            ref: 'User'
+        },
     }]
 }, {
     timestamps: {

@@ -13,6 +13,8 @@ Router.get('/senarii/:id', senariiCtrl.get)
 
 Router.put('/senarii/:id', auth, senariiCtrl.update)
 
+Router.post('/senarii/:id/comment', auth, senariiCtrl.addComment)
+
 Router.post('/senarii/new', auth, senariiCtrl.create)
 
 Router.delete('/senarii/:id', auth, senariiCtrl.delete)

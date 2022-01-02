@@ -69,3 +69,8 @@ export interface Senario {
     owner?: IUser
     sections: Section[]
 }
+
+export interface Comment {
+    comment: string
+    owner?: IUser
+}
