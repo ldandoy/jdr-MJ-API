@@ -28,6 +28,7 @@ app.use('/api', routes.authRouter)
 app.use('/api', routes.userRouter)
 app.use('/api', routes.senariiRouter)
 app.use('/api', routes.bugRouter)
+app.use('/api/admin', routes.adminBugRouter)
 
 // server listenning
 const PORT = process.env.PORT || 5000

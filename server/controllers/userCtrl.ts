@@ -24,11 +24,11 @@ const userCtrl = {
         try {
             const { avatar, name } = req.body
 
-            await Users.findOneAndUpdate({_id: req.user._id}, {
+            const user = await Users.findOneAndUpdate({_id: req.user._id}, {$set:{
                 avatar, name
-            })
+            }}, {new: true}).populate('senarii')
 
-            res.json({ msg: "Update Success!" })
+            res.json(user)
         } catch (err: any) {
             return res.status(500).json({msg: err.message})
         }
