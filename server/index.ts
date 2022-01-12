@@ -26,7 +26,7 @@ import './config/database'
 // Routes
 app.use('/api', routes.authRouter)
 app.use('/api', routes.userRouter)
-app.use('/api', routes.senariiRouter)
+app.use('/api', routes.scenariosRouter)
 app.use('/api', routes.bugRouter)
 app.use('/api/admin', routes.adminBugRouter)
 
