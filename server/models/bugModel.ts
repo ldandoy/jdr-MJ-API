@@ -1,18 +1,24 @@
 import mongoose, { Schema } from 'mongoose'
 
 const bugSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        require: true
-    },
-    fullname: {
-        type: String,
-        require: true
+    owner: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
     },
     report: {
         type: String,
         require: true
-    }
+    },
+    comments: [{
+        content: {
+            type: String,
+            required: true
+        },
+        owner: {
+            type: mongoose.Types.ObjectId,
+            ref: 'User'
+        },
+    }]
 }, {
     timestamps: {
         createdAt: 'created_at',

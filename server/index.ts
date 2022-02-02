@@ -11,7 +11,7 @@ import routes from './routes/index'
 // Middleware
 const app = express()
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(cors({
     origin: [`${process.env.BASE_URL}`],
     credentials: true,
@@ -29,6 +29,7 @@ app.use('/api', routes.userRouter)
 app.use('/api', routes.scenariosRouter)
 app.use('/api', routes.bugRouter)
 app.use('/api/admin', routes.adminBugRouter)
+app.use('/api/admin', routes.adminUserRouter)
 
 // server listenning
 const PORT = process.env.PORT || 5000

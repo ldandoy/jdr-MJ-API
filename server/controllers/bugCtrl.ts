@@ -7,8 +7,7 @@ const bugCtrl = {
     createBug: async (req: IReqAuth, res: Response) => {
         try {
             const bug = {
-                email:      req.body.email,
-                fullname:   req.body.fullname,
+                owner:      req.user?._id,
                 report:     req.body.report,
             };
         
